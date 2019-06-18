@@ -5,10 +5,11 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"trampfox/smoke/internal/tester"
 
-	"github.com/bluehoodie/smoke/internal/tester"
+	// "github.com/bluehoodie/smoke/internal/tester"
 
-	"github.com/jessevdk/go-flags"
+	flags "github.com/jessevdk/go-flags"
 )
 
 var opts struct {

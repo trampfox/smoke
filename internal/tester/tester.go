@@ -14,7 +14,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
@@ -40,10 +40,11 @@ type Contract struct {
 
 	Outputs map[string]string `json:"outputs" yaml:"outputs"`
 
-	ExpectedHTTPCode     int               `json:"http_code_is" yaml:"http_code_is"`
-	ExpectedResponseBody string            `json:"response_body_contains" yaml:"response_body_contains"`
-	ExpectedResponses    []string          `json:"response_contains" yaml:"response_contains"`
-	ExpectedHeaders      map[string]string `json:"response_headers_contain" yaml:"response_headers_contain"`
+	ExpectedHTTPCode          int               `json:"http_code_is" yaml:"http_code_is"`
+	ExpectedResponseBody      string            `json:"response_body_contains" yaml:"response_body_contains"`
+	ExpectedResponses         []string          `json:"response_contains" yaml:"response_contains"`
+	ExpectedResponsesJsonPath []string          `json:"response_jsonpath_contains" yaml:"response_jsonpath_contains"`
+	ExpectedHeaders           map[string]string `json:"response_headers_contain" yaml:"response_headers_contain"`
 }
 
 // Test represents the data for a full test suite
@@ -190,6 +191,10 @@ func (runner *Runner) validateContract(contract Contract) error {
 		return err
 	}
 
+	// if err = validateJsonPathResponseBody(contract, body); err != nil {
+	// 	return err
+	// }
+
 	if err = parseOutputs(runner, &contract, body); err != nil {
 		return err
 	}
@@ -256,6 +261,16 @@ func validateResponseBody(contract Contract, body []byte) error {
 			return fmt.Errorf("expected response not found in the body")
 		}
 	}
+
+	return nil
+}
+
+func validateJsonPathResponseBody(contract Contract, body []byte) error {
+	if len(contract.ExpectedResponsesJsonPath) == 0 {
+		return nil
+	}
+
+	// execute the jsonpath and check if all the ExpectedJsonPathResponses are present in the returned array
 
 	return nil
 }
